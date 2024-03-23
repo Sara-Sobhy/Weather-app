@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    android:backgroundTint="#837979"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="24dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cardClick"
+        android:layout_width="382dp"
+        android:layout_height="72dp"
+        android:background="#F1E3E3"
+        android:backgroundTint="#CAD0D1">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="82dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.068"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewDis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="TextView"
+            android:textColor="#686060"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/textViewDay"
+            app:layout_constraintStart_toStartOf="@+id/textViewDay"
+            app:layout_constraintTop_toBottomOf="@+id/textViewDay" />
+
+        <TextView
+            android:id="@+id/textViewtemp"
+            android:layout_width="77dp"
+            android:layout_height="23dp"
+            android:layout_marginStart="8dp"
+            android:text="TextView"
+            android:textColor="#686060"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewDis"
+            app:layout_constraintStart_toEndOf="@+id/textViewDis"
+            app:layout_constraintTop_toBottomOf="@+id/textViewDay"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="51dp"
+            android:layout_height="31dp"
+            android:layout_marginTop="21dp"
+            android:layout_marginEnd="31dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/delete_svgrepo_com" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
