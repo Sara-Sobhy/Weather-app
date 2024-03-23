@@ -16,17 +16,20 @@ import com.example.weather.dataBase.LocalDataSource
 import com.example.weather.dataBase.WeatherDatabase
 import com.example.weather.dataBase.WeatherRepoImp
 import com.example.weather.home.HomeFragment
+import com.example.weather.map.mapFragment
 import com.example.weather.modeView.WeatherViewModel
 import com.example.weather.modeView.WeatherViewModelFactory
 import com.example.weather.model.WeatherEntity
 import com.example.weather.network.API
 import com.example.weather.network.RemoteDataSource
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class search : Fragment() {
 
     private lateinit var weatherViewModel: WeatherViewModel
     private lateinit var favoriteAdapter: FavoriteAdapter
     private lateinit var recyclerView: RecyclerView
+    private lateinit var fcb:FloatingActionButton
 
 
     override fun onCreateView(
@@ -46,6 +49,16 @@ class search : Fragment() {
             }
         )
         recyclerView.adapter = favoriteAdapter
+        fcb=rootView.findViewById(R.id.fabOpenMap)
+
+        fcb.setOnClickListener{
+            val anotherFragment = mapFragment() // Replace AnotherFragment with the actual fragment you want to navigate to
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, anotherFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
 
         val productDao = WeatherDatabase.getInstance(requireContext().applicationContext).weatherDao()
         val localDataSource = LocalDataSource(productDao)

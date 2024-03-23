@@ -64,7 +64,6 @@ class HomeFragment : Fragment(), LocationListener {
     private lateinit var binding:FragmentHomeBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var hourlyAdapter: HourlyAdapter
-    private var isDrawerOpened = false
 
     private lateinit var recyclerViewD: RecyclerView
     private lateinit var daily: DailyAdapter
@@ -104,13 +103,6 @@ class HomeFragment : Fragment(), LocationListener {
         hourlyAdapter = HourlyAdapter()
         recyclerView.adapter = hourlyAdapter
 
-        binding.button2.setOnClickListener{
-            val destinationFragment = mapFragment()// Replace DestinationFragment with the actual fragment you want to navigate to
-            val fragmentManager = requireActivity().supportFragmentManager
-            val fragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.fragment_container, destinationFragment)
-            fragmentTransaction.commit()
-        }
 
         binding.searchView.setOnQueryTextListener(object :SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {

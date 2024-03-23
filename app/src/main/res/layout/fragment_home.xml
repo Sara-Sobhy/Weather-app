@@ -17,8 +17,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
-        android:layout_width="388dp"
-        android:layout_height="468dp"
+        android:layout_width="391dp"
+        android:layout_height="472dp"
         android:layout_marginTop="260dp"
         android:background="@drawable/round"
         android:backgroundTint="#191E2E"
@@ -222,14 +222,6 @@
 
     </SearchView>
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
     <!-- Navigation drawer -->
 
 
