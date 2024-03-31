@@ -41,6 +41,7 @@
         android:backgroundTint="#191E2E"
         app:headerLayout="@layout/header"
         app:itemTextColor="#F8F6F6"
+        app:itemIconTint="@android:color/white"
         app:menu="@menu/menu">
 
 

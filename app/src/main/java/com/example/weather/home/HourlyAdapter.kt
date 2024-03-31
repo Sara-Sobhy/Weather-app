@@ -59,7 +59,7 @@ class HourlyAdapter: RecyclerView.Adapter<HourlyAdapter.WeatherViewHolder>() {
             textDate.text = hour
             //textTime.text = forecast.weather[0].description
 
-            val tempInCelsius = forecast.main.temp - 273.15
+            val tempInCelsius = forecast.main.temp
             textTemperature.text = String.format(Locale.getDefault(), "%.2f°C", tempInCelsius)
 
             val iconResourceId = getWeatherIcon(forecast.weather[0].id)

@@ -1,7 +1,10 @@
 package com.example.weather.home
 
 import android.Manifest
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
@@ -14,41 +17,35 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ViewModel
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weather.R
+import com.example.weather.alert.Alert
+import com.example.weather.alert.AlertReceiver
+//import com.example.weather.alert.Alram_fragment
 import com.example.weather.dataBase.LocalDataSource
 import com.example.weather.dataBase.WeatherDatabase
 import com.example.weather.dataBase.WeatherRepoImp
 import com.example.weather.databinding.FragmentHomeBinding
-import com.example.weather.map.mapFragment
-import com.example.weather.modeView.WeatherViewModel
-import com.example.weather.modeView.WeatherViewModelFactory
+import com.example.weather.home.modeView.WeatherViewModel
+import com.example.weather.home.modeView.WeatherViewModelFactory
 import com.example.weather.model.Forecast
 import com.example.weather.model.WeatherResponse
 import com.example.weather.network.API
 import com.example.weather.network.RemoteDataSource
 import com.example.weather.network.WeatherState
-import com.google.android.gms.maps.MapFragment
-import com.google.android.material.navigation.NavigationView
+import com.example.weather.setting.SharedPreferencesManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -56,6 +53,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
+import kotlin.math.log
 
 const val key:String="137312c48108850ddb9ff6448da1156b"
 
@@ -74,7 +72,7 @@ class HomeFragment : Fragment(), LocationListener {
     private var lon: Double = 0.0
     private var lat: Double = 0.0
 
-
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -88,11 +86,14 @@ class HomeFragment : Fragment(), LocationListener {
 
 
         val productDao = WeatherDatabase.getInstance(requireContext().applicationContext).weatherDao()
-        val localDataSource = LocalDataSource(productDao)
-
+        val alramDao = WeatherDatabase.getInstance(requireContext().applicationContext).alarmDao()
+        val localDataSource = LocalDataSource(productDao,alramDao)
         val remoteDataSource = RemoteDataSource(API.retrofitService)
         val productRepo = WeatherRepoImp(remoteDataSource, localDataSource)
-        val viewModelFactory = WeatherViewModelFactory(productRepo)
+
+        sharedPreferencesManager = SharedPreferencesManager(requireContext())
+
+        val viewModelFactory = WeatherViewModelFactory(productRepo,sharedPreferencesManager)
         weatherViewModel = ViewModelProvider(this, viewModelFactory).get(WeatherViewModel::class.java)
 
         recyclerViewD.layoutManager= LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
@@ -160,18 +161,23 @@ class HomeFragment : Fragment(), LocationListener {
             fetchWeatherData(lat,lon)
         }
 
-        // Retrieve arguments
         val cityName = arguments?.getString("city_name")
         val temperature = arguments?.getDouble("temperature")
         val weatherDescription = arguments?.getString("weather_description")
-        // Update UI with retrieved data
-        rootView.apply {
-            findViewById<TextView>(R.id.main).text = cityName
-            findViewById<TextView>(R.id.temp).text = temperature?.toString() ?: "N/A"
-            findViewById<TextView>(R.id.maxmin).text = weatherDescription ?: "N/A"
+        val icon=arguments?.getInt("icon")
+
+        if (cityName != null && temperature != null && weatherDescription != null && icon != null) {
+            rootView.apply {
+                findViewById<TextView>(R.id.main).text = cityName
+                findViewById<TextView>(R.id.temp).text = temperature.toString()
+                findViewById<TextView>(R.id.maxmin).text = weatherDescription
+                findViewById<ImageView>(R.id.imageView).setImageResource(icon)
+
+            }
+        } else {
+            getLocation()
         }
 
-        getLocation()
         return rootView
     }
 
@@ -196,6 +202,7 @@ class HomeFragment : Fragment(), LocationListener {
         lon = location.longitude
 
         fetchWeatherData(lat, lon)
+        Log.i("latt", "onLocationChanged: "+lat)
 
         locationManager.removeUpdates(this)
     }
@@ -220,40 +227,48 @@ class HomeFragment : Fragment(), LocationListener {
     }
 
     private fun fetchWeatherData(latitude: Double, longitude: Double) {
+
+
         weatherViewModel.getCurrentWeather(latitude, longitude, key)
         weatherViewModel.getForecast(latitude,longitude, key)
 
         lifecycleScope.launch {
-            weatherViewModel.weatherData.collect { weatherState ->
+            weatherViewModel.weatherData.collectLatest { weatherState ->
                 when (weatherState) {
                     is WeatherState.Success<*> -> {
                         val weatherResponse = weatherState.data as WeatherResponse
                         Log.i("Weather", "Success: $weatherResponse")
-                            binding.main.text = weatherResponse.weather[0].description
-                            binding.temp.text = (weatherResponse.main.temp - 273.15).toString()
-                            binding.textView10.text = weatherResponse.timezone.toString()
+                        binding.main.text = weatherResponse.weather[0].description
+                        binding.temp.text = (weatherResponse.main.temp).toString()
+                        binding.textView10.text = weatherResponse.timezone.toString()
 
-                            val maxTemp = (weatherResponse.main.temp_max - 273.15).toInt()
-                            val minTemp = (weatherResponse.main.temp_min - 273.15).toInt()
-                            binding.maxmin.text = "$maxTemp°C $minTemp°C"
+                        val maxTemp = (weatherResponse.main.temp_max).toInt()
+                        val minTemp = (weatherResponse.main.temp_min).toInt()
+                        binding.maxmin.text = "$maxTemp°C $minTemp°C"
 
-                            // Convert the Unix timestamp to a human-readable date
-                            val unixTimestampSeconds: Long = weatherResponse.dt
-                            val date = Date(unixTimestampSeconds * 1000L)
-                            val dayFormat = SimpleDateFormat("EEEE", Locale.getDefault())
-                            val dayOfWeek = dayFormat.format(date)
-                            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-                            sdf.timeZone = TimeZone.getTimeZone("UTC")
-                            val formattedDate = sdf.format(date)
-                            binding.textView10.text = "$dayOfWeek: $formattedDate"
+                        // Convert the Unix timestamp to a human-readable date
+                        val unixTimestampSeconds: Long = weatherResponse.dt
+                        val date = Date(unixTimestampSeconds * 1000L)
+                        val dayFormat = SimpleDateFormat("EEEE", Locale.getDefault())
+                        val dayOfWeek = dayFormat.format(date)
+                        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                        sdf.timeZone = TimeZone.getTimeZone("UTC")
+                        val formattedDate = sdf.format(date)
+                        binding.textView10.text = "$dayOfWeek: $formattedDate"
 
-                            val iconResourceId = getWeatherIcon(weatherResponse.weather[0].id)
-                            binding.imageView.setImageResource(iconResourceId)
+                        val iconResourceId = getWeatherIcon(weatherResponse.weather[0].id)
+                        binding.imageView.setImageResource(iconResourceId)
 
                     }
+
                     is WeatherState.Error -> {
-                        Toast.makeText(requireContext(), "Error fetching weather data", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Error fetching weather data",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
+
                     WeatherState.Loading -> {
                         Log.d("Weather", "Loading")
                     }
@@ -263,19 +278,27 @@ class HomeFragment : Fragment(), LocationListener {
             }
         }
 
+
         lifecycleScope.launch {
-            weatherViewModel.forecastData.collect { forecastState ->
+            weatherViewModel.forecastData.collectLatest { forecastState ->
                 when (forecastState) {
                     is WeatherState.Error -> {
-                        Toast.makeText(requireContext(), "Error fetching forecast data", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Error fetching forecast data",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                   is WeatherState.Loading -> {
+
+                    is WeatherState.Loading -> {
                         Log.d("inn", "Loading")
                     }
+
                     is WeatherState.ForecastSuccess -> {
                         Log.i("inn", "fetchWeatherData: ")
                         val forecastList = forecastState.forecastResponse.list
                         val uniqueDaysForecast = getUniqueDaysForecast(forecastList)
+                        Log.i("inn", "fetchWeatherData:oooo "+uniqueDaysForecast)
                         hourlyAdapter.setForecastList(forecastList)
                         daily.setForecastList(uniqueDaysForecast)
                     }
@@ -284,7 +307,6 @@ class HomeFragment : Fragment(), LocationListener {
                 }
             }
         }
-
 
         try {
             val geocoder = Geocoder(requireContext(), Locale.getDefault())
@@ -301,6 +323,20 @@ class HomeFragment : Fragment(), LocationListener {
         } catch (e: IOException) {
             e.printStackTrace()
         }
+
+        val alertFragment = Alert.newInstance(lat, lon)
+        Log.i("latt", "fetchWeatherData: "+lat)
+
+        //passing the lat and lon to the alert
+        val alarmManager =  requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, AlertReceiver::class.java).apply {
+            putExtra("latitude", lat)
+            putExtra("longitude", lon)
+            Log.i("latt", "onCreateView: "+lat+lon)
+        }
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
+
 
     }
     private fun getUniqueDaysForecast(forecastList: List<Forecast>): List<Forecast> {

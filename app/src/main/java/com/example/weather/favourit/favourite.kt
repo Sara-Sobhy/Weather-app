@@ -1,11 +1,9 @@
 package com.example.weather.favourit
 
-import androidx.lifecycle.Observer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -15,18 +13,19 @@ import com.example.weather.R
 import com.example.weather.dataBase.LocalDataSource
 import com.example.weather.dataBase.WeatherDatabase
 import com.example.weather.dataBase.WeatherRepoImp
+import com.example.weather.favourit.modelView.FavouritViewModel
+import com.example.weather.favourit.modelView.FavouriteViewModelFactory
 import com.example.weather.home.HomeFragment
 import com.example.weather.map.mapFragment
-import com.example.weather.modeView.WeatherViewModel
-import com.example.weather.modeView.WeatherViewModelFactory
-import com.example.weather.model.WeatherEntity
+import com.example.weather.home.modeView.WeatherViewModel
+import com.example.weather.home.modeView.WeatherViewModelFactory
 import com.example.weather.network.API
 import com.example.weather.network.RemoteDataSource
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class search : Fragment() {
 
-    private lateinit var weatherViewModel: WeatherViewModel
+    private lateinit var weatherViewModel: FavouritViewModel
     private lateinit var favoriteAdapter: FavoriteAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var fcb:FloatingActionButton
@@ -45,14 +44,15 @@ class search : Fragment() {
                 weatherViewModel.deleteWeatherData(deletedWeather)
             },
             onFavoriteItemClick = { clickedWeather ->
-                navigateToHomeFragment(clickedWeather.cityName,clickedWeather.temp,clickedWeather.description)
+                val iconResourceId = resources.getIdentifier(clickedWeather.icon, "drawable", requireContext().packageName)
+                navigateToHomeFragment(clickedWeather.cityName,clickedWeather.temp,clickedWeather.description,iconResourceId)
             }
         )
         recyclerView.adapter = favoriteAdapter
         fcb=rootView.findViewById(R.id.fabOpenMap)
 
         fcb.setOnClickListener{
-            val anotherFragment = mapFragment() // Replace AnotherFragment with the actual fragment you want to navigate to
+            val anotherFragment = mapFragment()
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, anotherFragment)
                 .addToBackStack(null)
@@ -61,11 +61,12 @@ class search : Fragment() {
 
 
         val productDao = WeatherDatabase.getInstance(requireContext().applicationContext).weatherDao()
-        val localDataSource = LocalDataSource(productDao)
+        val alramDao = WeatherDatabase.getInstance(requireContext().applicationContext).alarmDao()
+        val localDataSource = LocalDataSource(productDao,alramDao)
         val remoteDataSource = RemoteDataSource(API.retrofitService)
         val productRepo = WeatherRepoImp(remoteDataSource, localDataSource)
-        val viewModelFactory = WeatherViewModelFactory(productRepo)
-        weatherViewModel = ViewModelProvider(this, viewModelFactory).get(WeatherViewModel::class.java)
+        val viewModelFactory = FavouriteViewModelFactory(productRepo)
+        weatherViewModel = ViewModelProvider(this, viewModelFactory).get(FavouritViewModel::class.java)
 
         lifecycleScope.launchWhenStarted {
             weatherViewModel.getAllWeather().collect { weatherList ->
@@ -76,12 +77,18 @@ class search : Fragment() {
 
         return rootView
     }
-    private fun navigateToHomeFragment(cityName: String, temperature: Double, weatherDescription: String) {
+    private fun navigateToHomeFragment(
+        cityName: String,
+        temperature: Double,
+        weatherDescription: String,
+        icon: Int,
+       ) {
         val homeFragment = HomeFragment().apply {
             arguments = Bundle().apply {
                 putString("city_name", cityName)
                 putDouble("temperature", temperature)
                 putString("weather_description", weatherDescription)
+                putInt("icon",icon)
             }
         }
         parentFragmentManager.beginTransaction()

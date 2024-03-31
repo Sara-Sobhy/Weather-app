@@ -9,10 +9,9 @@
         <item
             android:id="@+id/favourit"
             android:title="Favoueite"
-            android:icon="@drawable/favorite_star_achievement_svgrepo_com" />
-    </group>
+            android:icon="@drawable/favorite_star_achievement_svgrepo_com"
+            android:tint="@android:color/white"/>
 
-    <group android:id="@+id/group2">
         <item
             android:id="@+id/setting"
             android:title="Settings"
@@ -20,7 +19,8 @@
         <item
             android:id="@+id/alert"
             android:title="Alert"
-            android:icon="@drawable/alert_svgrepo_com" />
+            android:icon="@drawable/alert_svgrepo_com"
+            android:tint="@android:color/white"/>
     </group>
 
 </menu>

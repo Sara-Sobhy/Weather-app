@@ -56,7 +56,7 @@ class DailyAdapter: RecyclerView.Adapter<DailyAdapter.WeatherViewHolder>() {
             }
             textDate.text = day
 
-            val tempInCelsius = forecast.main.temp - 273.15
+            val tempInCelsius = forecast.main.temp
             textTemperature.text = String.format(Locale.getDefault(), "%.2f°C", tempInCelsius)
             textDescription.text = forecast.weather.firstOrNull()?.description ?: "N/A"
             val iconResourceId = getWeatherIcon(forecast.weather[0].id)

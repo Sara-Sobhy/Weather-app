@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".setting.setting_fragment">
+
+    <!-- CardView with rounded edges -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewMiddleBox"
+        android:layout_width="258dp"
+        android:layout_height="303dp"
+        android:layout_margin="24dp"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- ConstraintLayout for language and unit selection -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/middleBox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#191E2E">
+
+            <!-- Language Selection -->
+            <TextView
+                android:id="@+id/textLanguage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Language"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="#FDFAFA"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <RadioGroup
+                android:id="@+id/radioGroupLanguage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textLanguage">
+
+                <RadioButton
+                    android:id="@+id/radioButtonEnglish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="English"
+                    android:textColor="#FAF7F7" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonArabic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Arabic"
+                    android:textColor="#FAF8F8" />
+
+            </RadioGroup>
+
+            <!-- Unit Selection -->
+            <TextView
+                android:id="@+id/textUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:text="Units"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="#F6F5F5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/radioGroupLanguage" />
+
+            <RadioGroup
+                android:id="@+id/radioGroupUnit"
+                android:layout_width="254dp"
+                android:layout_height="68dp"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textUnit">
+
+                <RadioButton
+                    android:id="@+id/radioButtonMetric"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Metric"
+                    android:textColor="#FBF9F9" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonImperial"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Imperial"
+                    android:textColor="#FAFAFA" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonStandard"
+                    android:layout_width="107dp"
+                    android:layout_height="wrap_content"
+                    android:text="Standard"
+                    android:textColor="#FAF7F7" />
+
+            </RadioGroup>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

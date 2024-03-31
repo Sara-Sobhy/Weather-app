@@ -1,5 +1,6 @@
 package com.example.weather.dataBase
 
+import com.example.weather.model.Alarm
 import com.example.weather.model.ForecastResponse
 import com.example.weather.model.WeatherEntity
 import com.example.weather.model.WeatherResponse
@@ -8,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 class WeatherRepoImp(
     private val remoteDataSource: RemoteDataSource,
-    private val localDataSource: LocalDataSource
+    private val localDataSource: LocalDataSource,
 ) : WeatherRepo {
     override fun getAllWeather(): Flow<List<WeatherEntity>> {
         return localDataSource.getAllWeather()
@@ -22,15 +23,29 @@ class WeatherRepoImp(
         localDataSource.insertWeather(weather)
     }
 
-    override suspend fun getWeather(latitude: Double, longitude: Double, apiKey: String): WeatherResponse {
-        return remoteDataSource.getWeather(latitude, longitude, apiKey)
+    override suspend fun getWeather(latitude: Double, longitude: Double, apiKey: String,unit:String,languge:String): Flow<WeatherResponse> {
+        return remoteDataSource.getWeather(latitude, longitude, apiKey,unit,languge)
     }
 
-    override suspend fun getForecast(latitude: Double, longitude: Double, apiKey: String): ForecastResponse {
-        return remoteDataSource.getForecast(latitude, longitude, apiKey)
+    override suspend fun getForecast(latitude: Double, longitude: Double, apiKey: String,unit: String,languge: String): Flow<ForecastResponse> {
+        return remoteDataSource.getForecast(latitude, longitude, apiKey,unit,languge)
     }
 
-    override suspend fun searchWeatherByCity(cityName: String, apiKey: String): WeatherResponse {
+    override suspend fun searchWeatherByCity(cityName: String, apiKey: String): Flow<WeatherResponse> {
         return remoteDataSource.searchWeatherByCity(cityName, apiKey)
     }
+
+
+    override fun getAllAlarms(): Flow<List<Alarm>> {
+        return localDataSource.getAllAlarms()
+    }
+
+    override suspend fun insertAlarm(alarm: Alarm) {
+        localDataSource.insertAlarm(alarm)
+    }
+
+    override suspend fun deleteAlarm(alarm: Alarm) {
+       localDataSource.deleteAlarm(alarm)
+    }
+
 }
