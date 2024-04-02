@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Language"
+                android:text="@string/language"
                 android:textAppearance="?android:textAppearanceMedium"
                 android:textColor="#FDFAFA"
                 app:layout_constraintStart_toStartOf="parent"
@@ -52,14 +52,14 @@
                     android:id="@+id/radioButtonEnglish"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="English"
+                    android:text="@string/english"
                     android:textColor="#FAF7F7" />
 
                 <RadioButton
                     android:id="@+id/radioButtonArabic"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Arabic"
+                    android:text="@string/arabic"
                     android:textColor="#FAF8F8" />
 
             </RadioGroup>
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
-                android:text="Units"
+                android:text="@string/units"
                 android:textAppearance="?android:textAppearanceMedium"
                 android:textColor="#F6F5F5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -90,21 +90,21 @@
                     android:id="@+id/radioButtonMetric"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Metric"
+                    android:text="@string/metric"
                     android:textColor="#FBF9F9" />
 
                 <RadioButton
                     android:id="@+id/radioButtonImperial"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Imperial"
+                    android:text="@string/imperial"
                     android:textColor="#FAFAFA" />
 
                 <RadioButton
                     android:id="@+id/radioButtonStandard"
                     android:layout_width="107dp"
                     android:layout_height="wrap_content"
-                    android:text="Standard"
+                    android:text="@string/standard"
                     android:textColor="#FAF7F7" />
 
             </RadioGroup>

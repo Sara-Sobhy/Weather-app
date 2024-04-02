@@ -127,6 +127,9 @@ class HomeFragment : Fragment(), LocationListener {
                         binding.temp.text = (weatherResponse.main.temp - 273.15).toString()
                         binding.textView10.text = weatherResponse.timezone.toString()
 
+                        binding.textView1.text=getString(R.string.hourly)
+                        binding.textView4.text=getString(R.string.daily)
+
                         val maxTemp = (weatherResponse.main.temp_max - 273.15).toInt()
                         val minTemp = (weatherResponse.main.temp_min - 273.15).toInt()
                         binding.maxmin.text = "$maxTemp°C $minTemp°C"
@@ -241,6 +244,9 @@ class HomeFragment : Fragment(), LocationListener {
                         binding.main.text = weatherResponse.weather[0].description
                         binding.temp.text = (weatherResponse.main.temp).toString()
                         binding.textView10.text = weatherResponse.timezone.toString()
+
+                        binding.textView1.text=getString(R.string.hourly)
+                        binding.textView4.text=getString(R.string.daily)
 
                         val maxTemp = (weatherResponse.main.temp_max).toInt()
                         val minTemp = (weatherResponse.main.temp_min).toInt()

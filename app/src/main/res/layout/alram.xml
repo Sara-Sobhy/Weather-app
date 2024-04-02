@@ -16,7 +16,7 @@
         android:id="@+id/textViewTitle"
         android:layout_width="63dp"
         android:layout_height="wrap_content"
-        android:text="Alarm:"
+        android:text="@string/alarm"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
         android:textStyle="bold" />

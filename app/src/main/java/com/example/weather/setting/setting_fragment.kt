@@ -77,6 +77,7 @@ class setting_fragment : Fragment() {
                 apply()
             }
             sharedPreferencesManager.saveSelectedLanguage(selectedLanguage)
+            LanguageUtils.updateLanguage(requireContext(), selectedLanguage)
         }
 
         return rootView

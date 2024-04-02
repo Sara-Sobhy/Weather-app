@@ -5,11 +5,13 @@ import com.example.weather.model.ForecastResponse
 import com.example.weather.model.WeatherEntity
 import com.example.weather.model.WeatherResponse
 import com.example.weather.network.RemoteDataSource
+import com.example.weather.network.RemoteDataSourceInterface
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 
 class WeatherRepoImp(
-    private val remoteDataSource: RemoteDataSource,
-    private val localDataSource: LocalDataSource,
+    private val remoteDataSource: RemoteDataSourceInterface,
+    private val localDataSource: LocalDataSourceInterface,
 ) : WeatherRepo {
     override fun getAllWeather(): Flow<List<WeatherEntity>> {
         return localDataSource.getAllWeather()

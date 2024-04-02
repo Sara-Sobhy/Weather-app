@@ -6,6 +6,7 @@ import com.example.weather.model.WeatherEntity
 import com.example.weather.model.WeatherResponse
 import kotlinx.coroutines.flow.Flow
 
+
 interface WeatherRepo {
     fun getAllWeather(): Flow<List<WeatherEntity>>
     suspend fun deleteWeather(weather: WeatherEntity)
@@ -15,7 +16,6 @@ interface WeatherRepo {
     suspend fun searchWeatherByCity(cityName: String, apiKey: String): Flow<WeatherResponse>
     fun getAllAlarms(): Flow<List<Alarm>>
     suspend fun insertAlarm(alarm: Alarm)
-
     suspend fun deleteAlarm(alarm: Alarm)
 
 }

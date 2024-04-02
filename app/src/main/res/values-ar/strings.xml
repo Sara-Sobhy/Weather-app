@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name"></string>
+    <string name="open_nav">open navigation drawer</string>
+    <string name="close_nav">close navigation drawer</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="hourly">الساعة</string>
+    <string name="daily">يوميا</string>
+    <string name="language">اللغة</string>
+    <string name="english">الانجليزية</string>
+    <string name="arabic">العربية</string>
+    <string name="units">الوحدة</string>
+    <string name="standard">قياسي</string>
+    <string name="imperial">إمبراطوري</string>
+    <string name="metric">متري</string>
+    <string name="confirm">حفظ</string>
+    <string name="set">تم!</string>
+    <string name="alarm">الوقت:</string>
+
+</resources>
